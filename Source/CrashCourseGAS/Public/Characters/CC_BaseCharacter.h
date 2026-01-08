@@ -1,0 +1,28 @@
+﻿// Copyright Luis Ferreira
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
+#include "GameFramework/Character.h"
+#include "CC_BaseCharacter.generated.h"
+
+UCLASS(abstract)
+class CRASHCOURSEGAS_API ACC_BaseCharacter : public ACharacter , public IAbilitySystemInterface
+{
+	GENERATED_BODY()
+
+public:
+	ACC_BaseCharacter();
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+protected:
+	virtual void BeginPlay() override;
+	void GiveStartupAbilities();
+	
+private:
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Crash|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+};
