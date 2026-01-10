@@ -15,12 +15,12 @@
 ACC_PlayerCharacter::ACC_PlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
-	
+
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-	
+
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 	GetCharacterMovement()->JumpZVelocity = 500.0f;
@@ -29,17 +29,16 @@ ACC_PlayerCharacter::ACC_PlayerCharacter()
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.f;
-	
-	
+
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>("CameraBoom");
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = 600.0f;
 	CameraBoom->bUsePawnControlRotation = true;
-	
+
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>("FollowCamera");
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
-	
 }
 
 UAbilitySystemComponent* ACC_PlayerCharacter::GetAbilitySystemComponent() const
@@ -50,34 +49,35 @@ UAbilitySystemComponent* ACC_PlayerCharacter::GetAbilitySystemComponent() const
 		UE_LOG(LogTemp, Error, TEXT("PlayerState is invalid"));
 		return nullptr;
 	}
-	
+
 	return CCPlayerState->GetAbilitySystemComponent();
 }
 
 void ACC_PlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	
+
 	if (!IsValid(GetAbilitySystemComponent()))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Can't find AbilitySystemComponent"));
 		return;
 	}
-	
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(),this);
+
+	if (!HasAuthority()) return;
+
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
+	GiveStartupAbilities();
 }
 
 void ACC_PlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	
+
 	if (!IsValid(GetAbilitySystemComponent()))
 	{
 		UE_LOG(LogTemp, Error, TEXT("Can't find AbilitySystemComponent"));
 		return;
 	}
-	
-	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(),this);
+
+	GetAbilitySystemComponent()->InitAbilityActorInfo(GetPlayerState(), this);
 }
-
-

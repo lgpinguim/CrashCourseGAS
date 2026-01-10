@@ -7,6 +7,8 @@
 #include "GameFramework/Character.h"
 #include "CC_BaseCharacter.generated.h"
 
+class UGameplayAbility;
+
 UCLASS(abstract)
 class CRASHCOURSEGAS_API ACC_BaseCharacter : public ACharacter , public IAbilitySystemInterface
 {
