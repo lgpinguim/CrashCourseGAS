@@ -2,9 +2,13 @@
 
 
 #include "Player/CC_PlayerController.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "GameFramework/Character.h"
+#include "GameplayTags/CCTags.h"
 
 
 void ACC_PlayerController::SetupInputComponent()
@@ -93,5 +97,17 @@ void ACC_PlayerController::Look(const FInputActionValue& Value)
 
 void ACC_PlayerController::Primary()
 {
-	UE_LOG(LogTemp, Display, TEXT("Primary pressed"));
+	ActivateAbility(CCTags::CCAbilities::Primary);
+}
+
+void ACC_PlayerController::ActivateAbility(const FGameplayTag& AbilityTag) const
+{
+	UAbilitySystemComponent* AbilitySystemComponent =  UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetPawn());
+
+	if (!IsValid(AbilitySystemComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AbilitySystemComponent is not valid"));
+	}
+	
+	AbilitySystemComponent->TryActivateAbilitiesByTag(AbilityTag.GetSingleTagContainer());
 }

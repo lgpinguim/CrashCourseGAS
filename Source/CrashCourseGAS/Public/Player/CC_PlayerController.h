@@ -8,6 +8,7 @@
 
 class UInputMappingContext;
 class UInputAction;
+struct FGameplayTag;
 struct FInputActionValue;
 
 UCLASS()
@@ -39,4 +40,5 @@ private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Primary();
+	void ActivateAbility(const FGameplayTag& AbilityTag) const;
 };
